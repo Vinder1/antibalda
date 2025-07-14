@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AntiBaldaGame.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400"
+        x:Class="AntiBaldaGame.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Анти-Балда">
+    
+    <DockPanel>
+        <!-- Поле для ввода текста внизу -->
+        <TextBox x:Name="InputField" 
+                 DockPanel.Dock="Bottom"
+                 Margin="10"
+                 Width="50"
+                 TextChanged="InputField_OnTextChange"
+                 KeyDown="InputField_OnKeyDown"/>
+        
+        <TextBlock x:Name="InputSign"
+                   DockPanel.Dock="Bottom"
+                   Margin="20"
+                   HorizontalAlignment="Center">
+            Введите букву:
+        </TextBlock>
+        
+        <!-- Grid для кнопок 5x5 -->
+        <Grid x:Name="ButtonGrid" 
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Margin="10">
+            <!-- Колонки и строки будут добавлены программно -->
+        </Grid>
+        
+    </DockPanel>
+    
+</Window>
