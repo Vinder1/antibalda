@@ -31,12 +31,13 @@ public partial class MainWindow : Window
             {
                 var button = new Button
                 {
-                    Content = "    ",
+                    Content = " ",
                     HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                     VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Center,
                     Margin = new Thickness(2),
-                    Width = 30,
-                    Height = 30,
+                    Width = 40,
+                    Height = 40,
+                    FontSize = 20,
                 };
                 
                 button.Click += Button_Click;
@@ -50,20 +51,41 @@ public partial class MainWindow : Window
 
     private Button? _chosenButton;
 
+    private void InputFieldOn()
+    {
+        InputField.IsVisible = true;
+        InputSign.IsVisible = true;
+        InputField.Focus();
+    }
+    
+    private void InputFieldOff()
+    {
+        InputField.IsVisible = false;
+        InputSign.IsVisible = false;
+        InputField.Text = "";
+        _chosenButton = null;
+    }
+
     private void Button_Click(object? sender, RoutedEventArgs e)
     {
         if (sender is Button button)
         {
             _chosenButton = button;
-            InputField.IsVisible = true;
-            InputSign.IsVisible = true;
+            InputFieldOn();
         }
     }
 
+    private const string alphabet = "йцукенгшщзхъфывапролджэячсмитьбю";
     private void InputField_OnTextChange(object? sender, TextChangedEventArgs e)
     {
-        if (InputField.Text?.Length > 1)
-            InputField.Text = InputField.Text[^1].ToString();
+        if (InputField.Text?.Length >= 1)
+        {
+            var lastChar = InputField.Text[^1];
+            if (!alphabet.Contains(lastChar))
+                lastChar = ' ';
+            InputField.Text = lastChar.ToString();
+        }
+            
         var input = InputField.Text;
         if (_chosenButton != null)
             _chosenButton.Content = string.IsNullOrEmpty(input) ? "" : input;
@@ -73,12 +95,9 @@ public partial class MainWindow : Window
     {
         if (e.Key != Key.Enter)
             return;
-        
-        InputField.IsVisible = false;
-        InputSign.IsVisible = false;
-        InputField.Text = "";
-        _chosenButton = null;
-            
+
+        InputFieldOff();
+
         //TODO тут сделать поиск слов
     }
 }

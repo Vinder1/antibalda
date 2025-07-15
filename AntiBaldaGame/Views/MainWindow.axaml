@@ -3,18 +3,19 @@
         xmlns:vm="using:AntiBaldaGame.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="400"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
         x:Class="AntiBaldaGame.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Анти-Балда">
+        Title="Анти-Балда"
+        Width="512" Height="512">
     
     <DockPanel>
         <!-- Поле для ввода текста внизу -->
         <TextBox x:Name="InputField" 
                  DockPanel.Dock="Bottom"
                  Margin="10"
-                 Width="50"
+                 Width="60"
                  TextChanged="InputField_OnTextChange"
                  KeyDown="InputField_OnKeyDown"/>
         
@@ -29,7 +30,7 @@
         <Grid x:Name="ButtonGrid" 
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
-              Margin="10">
+              Margin="15">
             <!-- Колонки и строки будут добавлены программно -->
         </Grid>
         
