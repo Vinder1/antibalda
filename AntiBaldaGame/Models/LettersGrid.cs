@@ -8,9 +8,10 @@ public class LettersGrid
 {
     private readonly LetterButton[,] _grid;
 
-    public LettersGrid(int gridSize)
+    public LettersGrid()
     {
-        Console.WriteLine($"Grid size: {gridSize}");
+        var gridSize = Settings.Instance.GridSize;
+        //Console.WriteLine($"Grid size: {gridSize}");
         _grid = new LetterButton[gridSize, gridSize];
         for (var i = 0; i < gridSize; i++)
         {
@@ -41,16 +42,16 @@ public class LettersGrid
             //Console.WriteLine($"SelectedRow: {SelectedRow}, SelectedColumn: {SelectedColumn}");
         };
 
-    public int Sum()
-    {
-        var sum = 0;
-        for (var i = 0; i < _grid.GetLength(0); i++)
-        {
-            for (var j = 0; j < _grid.GetLength(1); j++)
-            {
-                sum += _grid[i,j].Letter == ' ' ? 0 : 1;
-            }
-        }
-        return sum;
-    }
+    // public int Sum()
+    // {
+    //     var sum = 0;
+    //     for (var i = 0; i < _grid.GetLength(0); i++)
+    //     {
+    //         for (var j = 0; j < _grid.GetLength(1); j++)
+    //         {
+    //             sum += _grid[i,j].Letter == ' ' ? 0 : 1;
+    //         }
+    //     }
+    //     return sum;
+    // }
 }

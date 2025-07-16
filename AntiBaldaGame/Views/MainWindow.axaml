@@ -1,49 +1,24 @@
-<Window xmlns="https://github.com/avaloniaui"
+﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AntiBaldaGame.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="400"
         x:Class="AntiBaldaGame.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Анти-Балда"
-        Width="512" Height="512">
+        Title="Анти-Балда (Регистрация)"
+        Width="320" Height="512">
     
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <vm:MainWindowViewModel />
     </Design.DataContext>
     
-    <DockPanel>
-        <!-- Поле для ввода текста внизу -->
-        <TextBox x:Name="InputField" 
-                 DockPanel.Dock="Bottom"
-                 Margin="10"
-                 Width="60"
-                 TextChanged="InputField_OnTextChange"
-                 KeyDown="InputField_OnKeyDown"
-                 Text="{Binding Path=InputFieldText}"
-                 IsVisible="{Binding InputVisible}"/>
-        
-        <TextBlock x:Name="InputSign"
-                   DockPanel.Dock="Bottom"
-                   Margin="20"
-                   HorizontalAlignment="Center"
-                   IsVisible="{Binding InputVisible}"
-                   >
-            Введите букву:
-        </TextBlock>
-        
-        <!-- Grid для кнопок 5x5 -->
-        <Grid x:Name="ButtonGrid" 
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Margin="15">
-            <!-- Колонки и строки будут добавлены программно -->
-        </Grid>
-        
-    </DockPanel>
-    
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Text="Б А Л Д А" FontSize="50" Padding="30" />
+        <Button Content="Начать" HorizontalAlignment="Center" Margin="0 20 0 0" Click="CloseButton_Click"/>
+        <TextBlock Text="Размер поля:"/> 
+        <TextBox Text="{Binding Settings.GridSize}"/> 
+        <TextBlock Text="Имя игрока:"/> 
+        <TextBox Text="{Binding Settings.Name}"/> 
+    </StackPanel>
 </Window>

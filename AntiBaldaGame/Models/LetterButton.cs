@@ -4,5 +4,5 @@ namespace AntiBaldaGame.Models;
 
 public partial class LetterButton : ObservableObject
 {
-    [ObservableProperty] public char letter = ' ';
+    [ObservableProperty] private char _letter = ' ';
 }
