@@ -10,6 +10,12 @@
         Title="Анти-Балда"
         Width="512" Height="512">
     
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
     <DockPanel>
         <!-- Поле для ввода текста внизу -->
         <TextBox x:Name="InputField" 
@@ -17,12 +23,16 @@
                  Margin="10"
                  Width="60"
                  TextChanged="InputField_OnTextChange"
-                 KeyDown="InputField_OnKeyDown"/>
+                 KeyDown="InputField_OnKeyDown"
+                 Text="{Binding Path=InputFieldText}"
+                 IsVisible="{Binding InputVisible}"/>
         
         <TextBlock x:Name="InputSign"
                    DockPanel.Dock="Bottom"
                    Margin="20"
-                   HorizontalAlignment="Center">
+                   HorizontalAlignment="Center"
+                   IsVisible="{Binding InputVisible}"
+                   >
             Введите букву:
         </TextBlock>
         

@@ -1,5 +1,9 @@
+using System;
+using AntiBaldaGame.Models;
+using AntiBaldaGame.ViewModels;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 
@@ -10,15 +14,18 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        DataContext = new MainWindowViewModel();
         InitializeButtonGrid();
-        InputField.IsVisible = false;
-        InputSign.IsVisible = false;
+        ViewModel.DisableInput();
     }
     
-    private const int GridSize = 5;
+    private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext;
+    
+    public const int GridSize = 5;
     
     private void InitializeButtonGrid()
     {
+        var grid = ViewModel.Grid;
         for (var i = 0; i < GridSize; i++)
         {
             ButtonGrid.ColumnDefinitions.Add(new ColumnDefinition());
@@ -39,7 +46,16 @@ public partial class MainWindow : Window
                     Height = 40,
                     FontSize = 20,
                 };
+
+                button.Bind(ContentProperty, new Binding
+                {
+                    Source = grid.Get(row,col),
+                    Path = nameof(LetterButton.Letter),
+                    Mode = BindingMode.TwoWay,
+                });
                 
+                button.Click += ViewModel.Grid.SelectButton(row, col);
+                //button.Click += ViewModel.OnButtonClick;
                 button.Click += Button_Click;
 
                 Grid.SetRow(button, row);
@@ -49,55 +65,19 @@ public partial class MainWindow : Window
         }
     }
 
-    private Button? _chosenButton;
-
-    private void InputFieldOn()
+    private void Button_Click(object? sender, RoutedEventArgs e)
     {
-        InputField.IsVisible = true;
-        InputSign.IsVisible = true;
+        ViewModel.OnButtonClick(sender, e);
         InputField.Focus();
     }
     
-    private void InputFieldOff()
-    {
-        InputField.IsVisible = false;
-        InputSign.IsVisible = false;
-        InputField.Text = "";
-        _chosenButton = null;
-    }
-
-    private void Button_Click(object? sender, RoutedEventArgs e)
-    {
-        if (sender is Button button)
-        {
-            _chosenButton = button;
-            InputFieldOn();
-        }
-    }
-
-    private const string alphabet = "йцукенгшщзхъфывапролджэячсмитьбю";
     private void InputField_OnTextChange(object? sender, TextChangedEventArgs e)
     {
-        if (InputField.Text?.Length >= 1)
-        {
-            var lastChar = InputField.Text[^1];
-            if (!alphabet.Contains(lastChar))
-                lastChar = ' ';
-            InputField.Text = lastChar.ToString();
-        }
-            
-        var input = InputField.Text;
-        if (_chosenButton != null)
-            _chosenButton.Content = string.IsNullOrEmpty(input) ? "" : input;
+        ViewModel.OnTextChange(sender, e);
     }
 
     private void InputField_OnKeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.Key != Key.Enter)
-            return;
-
-        InputFieldOff();
-
-        //TODO тут сделать поиск слов
+        ViewModel.OnKeyDown(sender, e);
     }
 }
