@@ -1,5 +1,5 @@
 ﻿using System;
-using Avalonia.Controls;
+using AntiBaldaGame.ViewModels;
 using Avalonia.Interactivity;
 
 namespace AntiBaldaGame.Models;
@@ -17,13 +17,13 @@ public class LettersGrid
         {
             for (var j = 0; j < gridSize; j++)
             {
-                _grid[i,j] = new LetterButton();
+                _grid[i, j] = new LetterButton();
             }
         }
     }
-    
+
     public LetterButton Get(int row, int column) => _grid[row, column];
-    
+
     public int SelectedRow { get; private set; }
     public int SelectedColumn { get; private set; }
 
@@ -31,15 +31,50 @@ public class LettersGrid
     {
         SelectedRow = -1;
         SelectedColumn = -1;
-        //Console.WriteLine("Reset!");
     }
-        
-    public EventHandler<RoutedEventArgs> SelectButton(int row, int column)
+
+    public EventHandler<RoutedEventArgs> SelectButton(int row, int column, GameWindowViewModel vm)
         => (from, e) =>
         {
-            SelectedRow = row;
-            SelectedColumn = column;
-            //Console.WriteLine($"SelectedRow: {SelectedRow}, SelectedColumn: {SelectedColumn}");
+            if (vm.Mode == GameWindowViewModel.GameMode.LetterChoosing)
+            {
+                if (SelectedRow != -1 && SelectedColumn != -1)
+                {
+                    Get(SelectedRow, SelectedColumn).IsSelected = false;
+                    SelectedRow = SelectedColumn = -1;
+                }
+
+                if (Get(row, column).Letter is not ' ' or '\0')
+                    return;
+                Get(row, column).IsSelected = true;
+                SelectedRow = row;
+                SelectedColumn = column;
+            }
+            else
+            {
+                var button = Get(row, column);
+
+                if (button.Letter is ' ' or '\0')
+                    return;
+
+                var cb = new CoordinatedLetterButton(button, row, column);
+
+                if (button.IsSelected)
+                {
+                    if (button.Color == CustomColors.White)
+                        return;
+                    if (vm.LetterSequence!.TryRemoveFirstOrLast(cb))
+                    {
+                        button.IsSelected = false;
+                    }
+                    return;
+                }        
+
+                if (vm.LetterSequence!.TryAdd(cb))
+                {
+                    button.IsSelected = true;
+                }
+            }
         };
 
     // public int Sum()

@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 
 namespace AntiBaldaGame.Views;
 
@@ -20,7 +21,7 @@ public partial class GameWindow : Window
     }
 
     private GameWindowViewModel ViewModel => (GameWindowViewModel)DataContext!;
-    
+
     private void InitializeButtonGrid()
     {
         var grid = ViewModel.Grid;
@@ -30,7 +31,7 @@ public partial class GameWindow : Window
             ButtonGrid.ColumnDefinitions.Add(new ColumnDefinition());
             ButtonGrid.RowDefinitions.Add(new RowDefinition());
         }
-        
+
         for (var row = 0; row < gridSize; row++)
         {
             for (var col = 0; col < gridSize; col++)
@@ -44,18 +45,33 @@ public partial class GameWindow : Window
                     Width = 40,
                     Height = 40,
                     FontSize = 20,
+                    Background = CustomColors.DarkGreen
                 };
-                
+
                 button.Bind(ContentProperty, new Binding
                 {
-                    Source = grid.Get(row,col),
+                    Source = grid.Get(row, col),
                     Path = nameof(LetterButton.Letter),
                     Mode = BindingMode.TwoWay,
                 });
-                
-                button.Click += ViewModel.Grid.SelectButton(row, col);
-                //button.Click += ViewModel.OnButtonClick;
+
+                button.Bind(BackgroundProperty, new Binding
+                {
+                    Source = grid.Get(row, col),
+                    Path = nameof(LetterButton.Color),
+                    Mode = BindingMode.TwoWay,
+                });
+
+                button.Bind(ForegroundProperty, new Binding
+                {
+                    Source = grid.Get(row, col),
+                    Path = nameof(LetterButton.TextColor),
+                    Mode = BindingMode.TwoWay,
+                });
+
+                //button.Click += ViewModel.OnButtonClick; 
                 button.Click += Button_Click;
+                button.Click += ViewModel.Grid.SelectButton(row, col, ViewModel); 
 
                 Grid.SetRow(button, row);
                 Grid.SetColumn(button, col);
@@ -66,10 +82,10 @@ public partial class GameWindow : Window
 
     private void Button_Click(object? sender, RoutedEventArgs e)
     {
-        ViewModel.OnButtonClick(sender, e);
+        ViewModel.OnGridButtonClick(sender, e);
         InputField.Focus();
     }
-    
+
     private void InputField_OnTextChange(object? sender, TextChangedEventArgs e)
     {
         ViewModel.OnTextChange(sender, e);
@@ -78,5 +94,10 @@ public partial class GameWindow : Window
     private void InputField_OnKeyDown(object? sender, KeyEventArgs e)
     {
         ViewModel.OnKeyDown(sender, e);
+    }
+
+    private void ApplyButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.OnApplyButtonClick(sender, e);
     }
 }

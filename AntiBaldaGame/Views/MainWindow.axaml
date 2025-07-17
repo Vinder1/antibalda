@@ -1,24 +1,33 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:AntiBaldaGame.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        x:Class="AntiBaldaGame.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Анти-Балда (Регистрация)"
-        Width="320" Height="512">
-    
+﻿<Window
+    x:Class="AntiBaldaGame.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:AntiBaldaGame.ViewModels"
+    Title="Анти-Балда (Регистрация)"
+    Width="320"
+    Height="512"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico">
+
     <Design.DataContext>
         <vm:MainWindowViewModel />
     </Design.DataContext>
-    
+
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBlock Text="Б А Л Д А" FontSize="50" Padding="30" />
-        <Button Content="Начать" HorizontalAlignment="Center" Margin="0 20 0 0" Click="CloseButton_Click"/>
-        <TextBlock Text="Размер поля:"/> 
-        <TextBox Text="{Binding Settings.GridSize}"/> 
-        <TextBlock Text="Имя игрока:"/> 
-        <TextBox Text="{Binding Settings.Name}"/> 
+        <TextBlock
+            Padding="30"
+            FontSize="50"
+            Text="Б А Л Д А" />
+        <Button
+            Margin="0,20,0,0"
+            HorizontalAlignment="Center"
+            Click="CloseButton_Click"
+            Content="Начать" />
+        <TextBlock Text="Размер поля:" />
+        <TextBox Text="{Binding Settings.GridSize}" />
+        <TextBlock Text="Имя игрока:" />
+        <TextBox Text="{Binding Settings.Name}" />
     </StackPanel>
 </Window>
