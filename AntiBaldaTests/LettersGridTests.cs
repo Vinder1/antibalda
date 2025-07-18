@@ -83,74 +83,7 @@ namespace AntiBaldaGame.Tests
 
         }
 
-        //private void SetMode(GameWindowViewModel.GameMode mode)
-        //{
-        //    _modeProperty?.SetValue(_viewModel, mode);
-        //}
-
-        //[Test]
-        //public void SelectButton_InLetterChoosingMode_SelectsEmptyCell()
-        //{
-        //    // Проверка инициализации
-        //    Assert.That(_grid, Is.Not.Null, "Grid is not initialized");
-        //    Assert.That(_viewModel, Is.Not.Null, "ViewModel is not initialized");
-
-        //    var button = _grid.Get(0, 0);
-        //    button.Letter = '\0';
-
-        //    var handler = _grid.SelectButton(0, 0, _viewModel);
-        //    Assert.That(handler, Is.Not.Null, "Button handler is null");
-
-        //    handler.Invoke(null, new RoutedEventArgs());
-
-        //    Assert.Multiple(() =>
-        //    {
-        //        Assert.That(button.IsSelected, Is.True, "Button should be selected");
-        //        Assert.That(_grid.SelectedRow, Is.EqualTo(0), "Incorrect selected row");
-        //        Assert.That(_grid.SelectedColumn, Is.EqualTo(0), "Incorrect selected column");
-        //    });
-        //}
-
-        //[Test]
-        //public void SelectButton_InLetterChoosingMode_DoesNotSelectNonEmptyCell()
-        //{
-        //    Assert.That(_grid, Is.Not.Null, "Grid is not initialized");
-        //    Assert.That(_viewModel, Is.Not.Null, "ViewModel is not initialized");
-
-        //    var button = _grid.Get(0, 0);
-        //    button.Letter = 'A';
-
-        //    var handler = _grid.SelectButton(0, 0, _viewModel);
-        //    Assert.That(handler, Is.Not.Null, "Button handler is null");
-
-        //    handler.Invoke(null, new RoutedEventArgs());
-
-        //    Assert.Multiple(() =>
-        //    {
-        //        Assert.That(button.IsSelected, Is.False, "Button should not be selected");
-        //        Assert.That(_grid.SelectedRow, Is.EqualTo(-1), "Should be no selected row");
-        //        Assert.That(_grid.SelectedColumn, Is.EqualTo(-1), "Should be no selected column");
-        //    });
-        //}
-
-        //[Test]
-        //public void SelectButton_InLetterCombiningMode_SelectsLetter()
-        //{
-        //    Assert.That(_grid, Is.Not.Null, "Grid is not initialized");
-        //    Assert.That(_viewModel, Is.Not.Null, "ViewModel is not initialized");
-
-        //    SetMode(GameWindowViewModel.GameMode.LetterCombining);
-        //    var button = _grid.Get(0, 0);
-        //    button.Letter = 'A';
-        //    button.IsSelected = false;
-
-        //    var handler = _grid.SelectButton(0, 0, _viewModel);
-        //    Assert.That(handler, Is.Not.Null, "Button handler is null");
-
-        //    handler.Invoke(null, new RoutedEventArgs());
-
-        //    Assert.That(button.IsSelected, Is.True, "Button should be selected in LetterCombining mode");
-        //}
+   
     }
 
     #region Test Helpers

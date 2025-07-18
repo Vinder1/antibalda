@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AntiBaldaTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc30661de3112c2df50dd6f9263d7f635215f657")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c64f64a93cddc7ed507dd93d052f94894822a378")]
 [assembly: System.Reflection.AssemblyProductAttribute("AntiBaldaTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AntiBaldaTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
