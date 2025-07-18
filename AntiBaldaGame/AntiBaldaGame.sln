@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiBaldaGame", "AntiBaldaGame.csproj", "{B7129E36-C9ED-43AF-9A8D-F3D38D3A8351}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntiBaldaGameTests", "..\AntiBaldaGameTests\AntiBaldaGameTests.csproj", "{1B0D1B45-8EFC-4BCF-93EF-A7379D740514}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,15 @@ Global
 		{B7129E36-C9ED-43AF-9A8D-F3D38D3A8351}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7129E36-C9ED-43AF-9A8D-F3D38D3A8351}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7129E36-C9ED-43AF-9A8D-F3D38D3A8351}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B0D1B45-8EFC-4BCF-93EF-A7379D740514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B0D1B45-8EFC-4BCF-93EF-A7379D740514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B0D1B45-8EFC-4BCF-93EF-A7379D740514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B0D1B45-8EFC-4BCF-93EF-A7379D740514}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17A3E0B1-0E3E-41A9-8C24-1959468D54A0}
 	EndGlobalSection
 EndGlobal
