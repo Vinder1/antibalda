@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AntiBaldaGame.Models;
 using AntiBaldaGame.ViewModels;
 using Avalonia;
@@ -6,7 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Media;
+using Avalonia.Threading;
 
 namespace AntiBaldaGame.Views;
 
@@ -18,6 +19,7 @@ public partial class GameWindow : Window
         DataContext = new GameWindowViewModel();
         InitializeButtonGrid();
         ViewModel.DisableInput();
+        Closing += OpenMainMenu;
     }
 
     private GameWindowViewModel ViewModel => (GameWindowViewModel)DataContext!;
@@ -71,7 +73,7 @@ public partial class GameWindow : Window
 
                 //button.Click += ViewModel.OnButtonClick; 
                 button.Click += Button_Click;
-                button.Click += ViewModel.Grid.SelectButton(row, col, ViewModel); 
+                button.Click += ViewModel.Grid.SelectButton(row, col, ViewModel);
 
                 Grid.SetRow(button, row);
                 Grid.SetColumn(button, col);
@@ -98,6 +100,21 @@ public partial class GameWindow : Window
 
     private void ApplyButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.OnApplyButtonClick(sender, e);
+        Dispatcher.UIThread.Invoke(() => ViewModel.OnApplyButtonClick(sender, e));
+    }
+
+    private void UndoButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.UndoChanges();
+    }
+
+    private void SkipButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ViewModel.Skip();
+    }
+    
+    private void OpenMainMenu(object? sender, WindowClosingEventArgs e)
+    {
+        new MainWindow().Show();
     }
 }

@@ -31,6 +31,26 @@
             DockPanel.Dock="Bottom"
             Orientation="Horizontal">
 
+            <StackPanel>
+                <Button
+                    x:Name="UndoButton"
+                    Width="30"
+                    Height="30"
+                    Click="UndoButton_OnClick"
+                    DockPanel.Dock="Left">
+                    🔄
+                </Button>
+                <Button
+                    x:Name="SkipButton"
+                    Width="30"
+                    Height="30"
+                    Click="SkipButton_OnClick"
+                    DockPanel.Dock="Left">
+                    ➡️
+                </Button>
+            </StackPanel>
+
+
             <!--  Поле для ввода текста внизу  -->
             <TextBlock
                 x:Name="InputSign"
@@ -56,9 +76,9 @@
                 Width="200"
                 Height="30"
                 Margin="10"
+                Click="ApplyButton_OnClick"
                 DockPanel.Dock="Top"
-                IsVisible="{Binding ApplyVisible}"
-                Click="ApplyButton_OnClick">
+                IsVisible="{Binding ApplyVisible}">
                 Подтвердить слово
             </Button>
         </StackPanel>
