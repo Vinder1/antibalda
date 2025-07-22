@@ -183,6 +183,7 @@ public partial class GameWindowViewModel : ViewModelBase
     public void Skip()
     {
         UndoChanges();
+        ClearOldButtons();
         Round++;
         (FirstPlayer.IsMakingMove, SecondPlayer.IsMakingMove)
             = (SecondPlayer.IsMakingMove, FirstPlayer.IsMakingMove);

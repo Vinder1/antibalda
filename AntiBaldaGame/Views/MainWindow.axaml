@@ -29,5 +29,29 @@
         <TextBox Text="{Binding Settings.GridSize}" />
         <TextBlock Text="Имя игрока:" />
         <TextBox Text="{Binding Settings.Name}" />
+
+        <TextBlock Text="Играть по локальной сети?" />
+        <Button Click="NetworkSwitch" />
+        <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="Ваш порт:" />
+        <TextBox IsVisible="{Binding Settings.IsNetworkGame}" Text="{Binding Settings.ListeningPort}" />
+        <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="Адрес подключения:" />
+        <DockPanel>
+            <TextBox 
+                IsVisible="{Binding Settings.IsNetworkGame}"
+                Text="{Binding Settings.SendingIp}"
+                DockPanel.Dock="Left"
+            />
+            <TextBox 
+                IsVisible="{Binding Settings.IsNetworkGame}"
+                Text="{Binding Settings.SendingPort}"
+                DockPanel.Dock="Right"
+            />
+        </DockPanel>
+        <DockPanel>
+            <Button IsVisible="{Binding Settings.IsNetworkGame}" Click="Connect" Content="Подрубиться"/>
+            <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="Есть контакт:" />
+            <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="{Binding Settings.Connected}" />
+        </DockPanel>
+
     </StackPanel>
 </Window>

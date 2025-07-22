@@ -1,4 +1,6 @@
-﻿using AntiBaldaGame.ViewModels;
+﻿using System;
+using AntiBaldaGame.Models;
+using AntiBaldaGame.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
@@ -16,5 +18,32 @@ public partial class MainWindow : Window
     {
         new GameWindow().Show();
         Close();
+    }
+
+    private void NetworkSwitch(object? sender, RoutedEventArgs e)
+    {
+        Settings.Instance.IsNetworkGame = !Settings.Instance.IsNetworkGame;
+        if (Settings.Instance.IsNetworkGame)
+        {
+            Settings.Instance.MultiplayerHandler = new();
+        }
+        else
+        {
+            Settings.Instance.MultiplayerHandler = null;
+        }
+    }
+
+    private void Connect(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            Settings.Instance.MultiplayerHandler!.Chat.StartServer();
+            Settings.Instance.MultiplayerHandler!.Chat
+                .SendMessageFromSocket(Settings.Instance.SendingIp, Settings.Instance.SendingPort);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);   
+        }
     }
 }
