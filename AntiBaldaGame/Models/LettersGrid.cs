@@ -36,6 +36,9 @@ public class LettersGrid
     public EventHandler<RoutedEventArgs> SelectButton(int row, int column, GameWindowViewModel vm)
         => (from, e) =>
         {
+            if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+                return;
+
             if (vm.Mode == GameWindowViewModel.GameMode.LetterChoosing)
             {
                 if (SelectedRow != -1 && SelectedColumn != -1)
@@ -68,7 +71,7 @@ public class LettersGrid
                         button.IsSelected = false;
                     }
                     return;
-                }        
+                }
 
                 if (vm.LetterSequence!.TryAdd(cb))
                 {

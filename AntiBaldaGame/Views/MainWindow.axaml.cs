@@ -3,6 +3,7 @@ using AntiBaldaGame.Models;
 using AntiBaldaGame.ViewModels;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 
 namespace AntiBaldaGame.Views;
 
@@ -16,30 +17,45 @@ public partial class MainWindow : Window
 
     private void CloseButton_Click(object? sender, RoutedEventArgs e)
     {
-        new GameWindow().Show();
-        Close();
+        Settings.Instance.GameRunning = true;
+        Settings.Instance.StartWord = OfflineDictionary.GetRandom;
+        var mh = MultiplayerHandler.Instance;
+        if (mh.IsNetworkGame)
+        {
+            mh.IsFirstPlayer = true;
+            mh.Chat!.SendStartGameCom();
+        }
+        else
+        {
+            StartGame();
+        }
+        //StartGame();
+    }
+
+    private void StartGame()
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            Settings.Instance.GameRunning = true;
+            new GameWindow().Show();
+            Close();
+        });
     }
 
     private void NetworkSwitch(object? sender, RoutedEventArgs e)
     {
-        Settings.Instance.IsNetworkGame = !Settings.Instance.IsNetworkGame;
-        if (Settings.Instance.IsNetworkGame)
-        {
-            Settings.Instance.MultiplayerHandler = new();
-        }
-        else
-        {
-            Settings.Instance.MultiplayerHandler = null;
-        }
+        MultiplayerHandler.Instance.IsNetworkGame = !MultiplayerHandler.Instance.IsNetworkGame;
     }
 
     private void Connect(object? sender, RoutedEventArgs e)
     {
         try
         {
-            Settings.Instance.MultiplayerHandler!.Chat.StartServer();
-            Settings.Instance.MultiplayerHandler!.Chat
-                .SendMessageFromSocket(Settings.Instance.SendingIp, Settings.Instance.SendingPort);
+            var mp = MultiplayerHandler.Instance;
+            mp.Chat = new(mp.ListeningPort);
+            mp.Chat.OnGameStart += StartGame;
+            mp.Chat.StartServer();
+            mp.Chat.SendMessageFromSocket(mp.SendingIp, mp.SendingPort);
         }
         catch (Exception ex)
         {

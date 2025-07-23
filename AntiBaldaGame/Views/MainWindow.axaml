@@ -7,7 +7,7 @@
     xmlns:vm="using:AntiBaldaGame.ViewModels"
     Title="Анти-Балда (Регистрация)"
     Width="320"
-    Height="512"
+    Height="586"
     x:DataType="vm:MainWindowViewModel"
     Icon="/Assets/avalonia-logo.ico">
 
@@ -25,33 +25,69 @@
             HorizontalAlignment="Center"
             Click="CloseButton_Click"
             Content="Начать" />
-        <TextBlock Text="Размер поля:" />
-        <TextBox Text="{Binding Settings.GridSize}" />
-        <TextBlock Text="Имя игрока:" />
-        <TextBox Text="{Binding Settings.Name}" />
+        <TextBlock Text="Размер поля:" Margin="5"/>
+        <TextBox Text="{Binding Settings.GridSize}" Margin="5"/>
+        <TextBlock Text="Имя игрока:" Margin="5"/>
+        <TextBox Text="{Binding Settings.Name}" Margin="5"/>
 
-        <TextBlock Text="Играть по локальной сети?" />
-        <Button Click="NetworkSwitch" />
-        <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="Ваш порт:" />
-        <TextBox IsVisible="{Binding Settings.IsNetworkGame}" Text="{Binding Settings.ListeningPort}" />
-        <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="Адрес подключения:" />
+        <TextBlock Text="Играть по локальной сети?" Margin="5"/>
+        <Button Width="100" Click="NetworkSwitch" HorizontalAlignment="Center"/>
+        <TextBlock
+            Margin="5"
+            IsVisible="{Binding MultiplayerHandler.IsNetworkGame}"
+            Text="Ваш порт:" />
+        <TextBox
+            Margin="5"
+            IsVisible="{Binding MultiplayerHandler.IsNetworkGame}"
+            Text="{Binding MultiplayerHandler.ListeningPort}" />
+        <TextBlock
+            Margin="5"
+            IsVisible="{Binding MultiplayerHandler.IsNetworkGame}"
+            Text="Адрес подключения:" />
         <DockPanel>
-            <TextBox 
-                IsVisible="{Binding Settings.IsNetworkGame}"
-                Text="{Binding Settings.SendingIp}"
+            <TextBox
+                Margin="5"
                 DockPanel.Dock="Left"
-            />
-            <TextBox 
-                IsVisible="{Binding Settings.IsNetworkGame}"
-                Text="{Binding Settings.SendingPort}"
+                IsVisible="{Binding MultiplayerHandler.IsNetworkGame}"
+                Text="{Binding MultiplayerHandler.SendingIp}" />
+            <TextBox
+                Margin="5"
                 DockPanel.Dock="Right"
-            />
+                IsVisible="{Binding MultiplayerHandler.IsNetworkGame}"
+                Text="{Binding MultiplayerHandler.SendingPort}" />
         </DockPanel>
         <DockPanel>
-            <Button IsVisible="{Binding Settings.IsNetworkGame}" Click="Connect" Content="Подрубиться"/>
-            <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="Есть контакт:" />
-            <TextBlock IsVisible="{Binding Settings.IsNetworkGame}" Text="{Binding Settings.Connected}" />
+            <Button
+                Margin="5"
+                Click="Connect"
+                Content="Подрубиться"
+                IsVisible="{Binding MultiplayerHandler.IsNetworkGame}" />
+                <TextBlock
+                    Margin="5"
+                    IsVisible="{Binding MultiplayerHandler.IsNetworkGame}" 
+                    Text="Есть контакт:"
+                    VerticalAlignment="Center" />
+                <TextBlock 
+                    Margin="5"
+                    IsVisible="{Binding MultiplayerHandler.IsNetworkGame}" 
+                    Text="{Binding MultiplayerHandler.Connected}"
+                    VerticalAlignment="Center" />
         </DockPanel>
+        <DockPanel>
+            <TextBlock 
+                Margin="5"
+                IsVisible="{Binding MultiplayerHandler.Connected}" 
+                Text="Сказать:" />
+            <TextBox
+                Margin="5"
+                DockPanel.Dock="Left"
+                IsVisible="{Binding MultiplayerHandler.Connected}"
+                Text="{Binding MultiplayerHandler.SendingText}" />
+        </DockPanel>
+        <TextBlock
+            Margin="5"
+            IsVisible="{Binding MultiplayerHandler.Connected}"
+            Text="{Binding MultiplayerHandler.IncomeText}" />
 
     </StackPanel>
 </Window>

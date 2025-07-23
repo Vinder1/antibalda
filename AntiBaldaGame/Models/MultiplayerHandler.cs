@@ -1,7 +1,29 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace AntiBaldaGame.Models;
 
-public class MultiplayerHandler
+public partial class MultiplayerHandler : ObservableObject
 {
-    public LocalNetworkChat Chat { get; } = new(Settings.Instance.ListeningPort);
-    public bool IsFirstPlayer;
+    [ObservableProperty] public bool isNetworkGame = false;
+    public int ListeningPort { get; set; } = 5000;
+    public string SendingIp { get; set; } = LocalNetworkChat.GetLocalIPv4Addresses()[0];
+    public int SendingPort { get; set; } = 5001;
+
+    [ObservableProperty] private bool connected = false;
+    [ObservableProperty] private string incomeText = " ";
+    [ObservableProperty] private string sendingText = " ";
+
+    public LocalNetworkChat? Chat { get; set; }
+    public bool IsFirstPlayer = true;
+
+    public bool IsFirstPlayerMakingMove = false;
+    public bool IsCurrentPlayerMakingMove => !IsNetworkGame || IsFirstPlayerMakingMove == IsFirstPlayer;
+
+    public static MultiplayerHandler Instance { get; private set; } = null!;
+    public static void ResetInstance() => Instance = new();
+
+    public MultiplayerHandler()
+    {
+        Instance = this;
+    }
 }

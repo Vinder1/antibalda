@@ -30,14 +30,16 @@ public partial class GameWindowViewModel : ViewModelBase
     public LetterSequence? LetterSequence { get; private set; }
     private List<string> UsedWords = [];
 
+    public event Action OnClose = () => { };
+
     public Player FirstPlayer { get; } = new()
     {
-        Name = Settings.Instance.Name,
+        Name = MultiplayerHandler.Instance.IsFirstPlayer ? Settings.Instance.Name : Settings.Instance.OtherPlayerName,
         IsMakingMove = true,
     };
     public Player SecondPlayer { get; } = new()
     {
-        Name = "Бибурат",
+        Name = MultiplayerHandler.Instance.IsFirstPlayer ? Settings.Instance.OtherPlayerName : Settings.Instance.Name,
         IsMakingMove = false,
     };
 
@@ -51,7 +53,7 @@ public partial class GameWindowViewModel : ViewModelBase
     {
         Grid = new();
         var gridSize = Settings.Instance.GridSize;
-        var word = OfflineDictionary.GetRandom;
+        var word = Settings.Instance.StartWord;
         for (var i = 0; i < 5; i++)
         {
             Grid.Get(gridSize / 2, (gridSize - 5) / 2 + i).Letter = word[i];
@@ -76,6 +78,9 @@ public partial class GameWindowViewModel : ViewModelBase
 
     public void OnGridButtonClick(object? sender, RoutedEventArgs e)
     {
+        if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+            return;
+
         if (Mode == GameMode.LetterChoosing)
         {
             if (ChosenButton != null && previousLetterOnChosenButton != '-')
@@ -98,6 +103,9 @@ public partial class GameWindowViewModel : ViewModelBase
     private char previousLetterOnChosenButton = '-';
     public void OnTextChange(object? sender, TextChangedEventArgs e)
     {
+        if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+            return;
+
         var input = StringFormatter.LeaveOneCharacter(InputFieldText);
         InputFieldText = input.ToString();
         if (ChosenButton != null && char.IsLetter(input))
@@ -110,6 +118,9 @@ public partial class GameWindowViewModel : ViewModelBase
 
     public void OnKeyDown(object? sender, KeyEventArgs e)
     {
+        if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+            return;
+
         if (e.Key != Key.Enter)
             return;
 
@@ -128,6 +139,9 @@ public partial class GameWindowViewModel : ViewModelBase
 
     public async Task OnApplyButtonClick(object? sender, RoutedEventArgs e)
     {
+        if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+            return;
+
         ApplyVisible = false;
 
         var word = LetterSequence!.GetWord();
@@ -136,39 +150,58 @@ public partial class GameWindowViewModel : ViewModelBase
         var res =
             await OnlineWordChecker.ExistsInWiktionary(word)
             || await OnlineWordChecker.ExistsInWiktionary(reversedWord);
+
         if (res)
         {
-            // Successful, next round
-            // Console.WriteLine(word);
-            var wordCost = word.Length - UsedWords.Count(s => s == word) - UsedWords.Count(s => s == reversedWord);
+            var scoreAdded = word.Length - UsedWords.Count(s => s == word) - UsedWords.Count(s => s == reversedWord);
+            var cell = Grid.SelectedRow * Settings.Instance.GridSize + Grid.SelectedColumn;
 
-            if (FirstPlayer.IsMakingMove)
-                FirstPlayer.Score += wordCost;
-            else
-                SecondPlayer.Score += wordCost;
+            if (MultiplayerHandler.Instance.IsNetworkGame)
+                MultiplayerHandler.Instance.Chat!.SendNextMoveCom(cell, ChosenButton!.Letter, scoreAdded, word);
 
-            UsedWords.Add(word);
-
-            (FirstPlayer.IsMakingMove, SecondPlayer.IsMakingMove)
-                = (SecondPlayer.IsMakingMove, FirstPlayer.IsMakingMove);
-            Round++;
-
-            ClearButtonsSelections();
-            ClearOldButtons();
-            ResetChosenButton();
+            NextRound(
+                cell: cell,
+                letter: ChosenButton!.Letter,
+                scoreAdded: scoreAdded,
+                word: word);
         }
         else
-        {
             UndoChanges();
-        }
 
         LetterSequence = null;
+        Mode = GameMode.LetterChoosing;
+    }
 
+    public void NextRound(int cell, char letter, int scoreAdded, string word)
+    {
+        UsedWords.Add(word);
+        if (FirstPlayer.IsMakingMove)
+            FirstPlayer.Score += scoreAdded;
+        else
+            SecondPlayer.Score += scoreAdded;
+
+        var size = Settings.Instance.GridSize;
+        Grid.Get(cell / size, cell % size).Letter = letter;
+
+        (FirstPlayer.IsMakingMove, SecondPlayer.IsMakingMove)
+            = (SecondPlayer.IsMakingMove, FirstPlayer.IsMakingMove);
+        Round++;
+        _skipCount = 0;
+        MultiplayerHandler.Instance.IsFirstPlayerMakingMove = !MultiplayerHandler.Instance.IsFirstPlayerMakingMove;
+
+        ClearButtonsSelections();
+        ClearOldButtons();
+        ResetChosenButton();
+
+        LetterSequence = null;
         Mode = GameMode.LetterChoosing;
     }
 
     public void UndoChanges()
     {
+        if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+            return;
+
         if (ChosenButton != null)
             ChosenButton.Letter = ' ';
         Mode = GameMode.LetterChoosing;
@@ -180,13 +213,33 @@ public partial class GameWindowViewModel : ViewModelBase
         ResetChosenButton();
     }
 
+    private int _skipCount = 0;
     public void Skip()
     {
+        if (!MultiplayerHandler.Instance.IsCurrentPlayerMakingMove)
+            return;
+
+        if (MultiplayerHandler.Instance.IsNetworkGame)
+            MultiplayerHandler.Instance.Chat!.SendSkipCom();
+
+        SkipChecked();
+    }
+
+    public void SkipChecked()
+    {
+        _skipCount++;
+        if (_skipCount == 6)
+        {
+            OnClose.Invoke();
+            return;
+        }
+
         UndoChanges();
         ClearOldButtons();
         Round++;
         (FirstPlayer.IsMakingMove, SecondPlayer.IsMakingMove)
             = (SecondPlayer.IsMakingMove, FirstPlayer.IsMakingMove);
+        MultiplayerHandler.Instance.IsFirstPlayerMakingMove = !MultiplayerHandler.Instance.IsFirstPlayerMakingMove;
     }
 
     private void ClearButtonsSelections()

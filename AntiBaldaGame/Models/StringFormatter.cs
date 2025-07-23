@@ -9,7 +9,6 @@ public static class StringFormatter
 {
     private const string Alphabet = "йцукенгшщзхъфывапролджэячсмитьбю";
 
-    //TODO Протестировать
     public static char LeaveOneCharacter(string? input)
     {
         if (input?.Trim().Length != 0)

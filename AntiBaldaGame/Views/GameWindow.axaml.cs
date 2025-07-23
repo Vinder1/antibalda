@@ -19,7 +19,19 @@ public partial class GameWindow : Window
         DataContext = new GameWindowViewModel();
         InitializeButtonGrid();
         ViewModel.DisableInput();
-        Closing += OpenMainMenu;
+        Closing += CloseGameWindow;
+        var m = MultiplayerHandler.Instance;
+        if (m.IsNetworkGame)
+        {
+            m.Chat!.OnGameExit += Close;
+            m.Chat!.OnSkipRequested += ViewModel.SkipChecked;
+            m.Chat!.OnNextRoundRequested += ViewModel.NextRound;
+            // (a, b, c, d) => {
+            //     Dispatcher.UIThread.Invoke(() => ViewModel.NextRound(a,b,c,d));
+            // };
+        }
+        ViewModel.OnClose += Close;
+        m.IsFirstPlayerMakingMove = true;
     }
 
     private GameWindowViewModel ViewModel => (GameWindowViewModel)DataContext!;
@@ -112,9 +124,21 @@ public partial class GameWindow : Window
     {
         ViewModel.Skip();
     }
-    
-    private void OpenMainMenu(object? sender, WindowClosingEventArgs e)
+
+    private void CloseGameWindow(object? sender, WindowClosingEventArgs e)
     {
-        new MainWindow().Show();
+        OpenMainMenu();
+    }
+
+    private void OpenMainMenu()
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            if (MultiplayerHandler.Instance.IsFirstPlayer)
+                MultiplayerHandler.Instance.Chat?.SendExitGameCom();
+            new MainWindow().Show();
+        });
+        Settings.ResetInstance();
+        MultiplayerHandler.ResetInstance();
     }
 }
