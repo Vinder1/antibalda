@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using AntiBaldaGame.Models;
@@ -29,7 +30,6 @@ public partial class GameWindowViewModel : ViewModelBase
     public LettersGrid Grid { get; } = null!;
 
     public LetterSequence? LetterSequence { get; private set; }
-    private List<string> UsedWords = [];
 
     public event Action OnClose = () => { };
 
@@ -59,7 +59,7 @@ public partial class GameWindowViewModel : ViewModelBase
         {
             Grid.Get(gridSize / 2, (gridSize - 5) / 2 + i).Letter = word[i];
         }
-        UsedWords.Add(word);
+        //UsedWords.Add(word);
     }
 
     public void ResetChosenButton() => Grid.ResetSelectedButton();
@@ -148,17 +148,18 @@ public partial class GameWindowViewModel : ViewModelBase
         var word = LetterSequence!.GetWord();
         var reversedWord = new string([.. word.Reverse()]);
 
-        var res =
-            await OnlineWordChecker.ExistsInWiktionary(word)
-            || await OnlineWordChecker.ExistsInWiktionary(reversedWord);
+        var res1 = await OnlineWordChecker.ExistsInWiktionary(word);
+        var res2 = await OnlineWordChecker.ExistsInWiktionary(reversedWord);
 
-        if (res)
+        if (res1 || res2)
         {
-            var scoreAdded = word.Length - UsedWords.Count(s => s == word) - UsedWords.Count(s => s == reversedWord);
+            var scoreAdded = word.Length - CountWords(word) - CountWords(reversedWord);
             var cell = Grid.SelectedRow * Settings.Instance.GridSize + Grid.SelectedColumn;
+            if (res2)
+                word = reversedWord;
 
             if (MultiplayerHandler.Instance.IsNetworkGame)
-                MultiplayerHandler.Instance.Chat!.SendNextMoveCom(cell, ChosenButton!.Letter, scoreAdded, word);
+                    MultiplayerHandler.Instance.Chat!.SendNextMoveCom(cell, ChosenButton!.Letter, scoreAdded, word);
 
             NextRound(
                 cell: cell,
@@ -173,13 +174,24 @@ public partial class GameWindowViewModel : ViewModelBase
         Mode = GameMode.LetterChoosing;
     }
 
+    private int CountWords(string word)
+        => Settings.Instance.StartWord == word ? 1 : 0
+        + FirstPlayer.UsedWords.Count(s => s == word)
+        + SecondPlayer.UsedWords.Count(s => s == word);
+
     public void NextRound(int cell, char letter, int scoreAdded, string word)
     {
-        UsedWords.Add(word);
         if (FirstPlayer.IsMakingMove)
+        {
             FirstPlayer.Score += scoreAdded;
+            FirstPlayer.UsedWords.Add(word);
+        }
         else
+        {
             SecondPlayer.Score += scoreAdded;
+            SecondPlayer.UsedWords.Add(word);
+        }
+            
 
         var size = Settings.Instance.GridSize;
         Grid.Get(cell / size, cell % size).Letter = letter;

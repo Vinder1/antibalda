@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 
 namespace AntiBaldaGame.Views;
@@ -57,7 +58,9 @@ public partial class GameWindow : Window
                     Width = 40,
                     Height = 40,
                     FontSize = 20,
-                    Background = CustomColors.DarkGreen
+                    //Background = CustomColors.DarkGreen,
+                    BorderBrush = CustomColors.White,
+                    BorderThickness = new Thickness(2),
                 };
 
                 button.Bind(ContentProperty, new Binding
