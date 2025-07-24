@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using AntiBaldaGame.Models;
 using AntiBaldaGame.ViewModels;
 using Avalonia;
@@ -138,7 +136,5 @@ public partial class GameWindow : Window
                 MultiplayerHandler.Instance.Chat?.SendExitGameCom();
             new MainWindow().Show();
         });
-        Settings.ResetInstance();
-        MultiplayerHandler.ResetInstance();
     }
 }

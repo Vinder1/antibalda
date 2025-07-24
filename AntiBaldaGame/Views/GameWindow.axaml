@@ -6,8 +6,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:AntiBaldaGame.ViewModels"
     Title="Анти-Балда"
-    Width="320"
-    Height="512"
+    Width="640"
+    Height="320"
     d:DesignHeight="400"
     d:DesignWidth="400"
     x:DataType="vm:GameWindowViewModel"
@@ -15,156 +15,152 @@
     mc:Ignorable="d">
 
     <Design.DataContext>
-        <!--
-            This only sets the DataContext for the previewer in an IDE,
-            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
-        -->
         <vm:GameWindowViewModel />
     </Design.DataContext>
 
     <DockPanel>
-        <StackPanel
-            Height="64"
-            Margin="10"
-            HorizontalAlignment="Center"
-            Background="DarkOliveGreen"
-            DockPanel.Dock="Bottom"
-            Orientation="Horizontal">
-
-            <StackPanel>
-                <Button
-                    x:Name="UndoButton"
-                    Width="30"
-                    Height="30"
-                    Click="UndoButton_OnClick"
-                    DockPanel.Dock="Left">
-                    🔄
-                </Button>
-                <Button
-                    x:Name="SkipButton"
-                    Width="30"
-                    Height="30"
-                    Click="SkipButton_OnClick"
-                    DockPanel.Dock="Left">
-                    ➡️
-                </Button>
-            </StackPanel>
-
-
-            <!--  Поле для ввода текста внизу  -->
-            <TextBlock
-                x:Name="InputSign"
-                Margin="20"
-                HorizontalAlignment="Center"
-                DockPanel.Dock="Bottom"
-                IsVisible="{Binding InputVisible}">
-                Введите букву:
-            </TextBlock>
-
-            <TextBox
-                x:Name="InputField"
-                Width="10"
-                Margin="10"
-                DockPanel.Dock="Bottom"
-                IsVisible="{Binding InputVisible}"
-                KeyDown="InputField_OnKeyDown"
-                Text="{Binding Path=InputFieldText}"
-                TextChanged="InputField_OnTextChange" />
-
-            <Button
-                x:Name="ApplyField"
+        <DockPanel DockPanel.Dock="Top">
+            <Border
                 Width="200"
-                Height="30"
-                Margin="10"
-                Click="ApplyButton_OnClick"
-                DockPanel.Dock="Top"
-                IsVisible="{Binding ApplyVisible}">
-                Подтвердить слово
-            </Button>
-        </StackPanel>
+                Height="80"
+                Margin="0,0,0,10"
+                Padding="10"
+                Background="{Binding FirstPlayer.Color}"
+                CornerRadius="5"
+                DockPanel.Dock="Left">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Ellipse
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Width="30"
+                        Height="20"
+                        Fill="#808080" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="20,0,0,0"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Text="{Binding FirstPlayer.Name}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        FontSize="16"
+                        Text="{Binding FirstPlayer.Score}" />
+                </Grid>
+            </Border>
+            <Border
+                Width="200"
+                Height="80"
+                Margin="0,0,0,10"
+                Padding="10"
+                Background="{Binding SecondPlayer.Color}"
+                CornerRadius="5"
+                DockPanel.Dock="Right">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Ellipse
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Width="30"
+                        Height="20"
+                        Fill="#808080" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Margin="20,0,0,0"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Text="{Binding SecondPlayer.Name}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        FontSize="16"
+                        Text="{Binding SecondPlayer.Score}" />
+                </Grid>
+            </Border>
 
-        <StackPanel
-            Height="64"
-            Margin="10"
-            HorizontalAlignment="Center"
-            DockPanel.Dock="Top"
-            Orientation="Horizontal"
-            Spacing="20">
 
-            <!-- <Border Background="#707040" CornerRadius="5"> -->
+            <!--  Grid для кнопок 5x5  -->
+            <Grid
+                x:Name="ButtonGrid"
+                Margin="15"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <!--  Колонки и строки будут добавлены программно  -->
+            </Grid>
+        </DockPanel>
+
+        <DockPanel DockPanel.Dock="Bottom">
+
             <TextBlock
                 Margin="15"
-                DockPanel.Dock="Bottom"
+                DockPanel.Dock="Left"
                 FontSize="50"
                 Text="{Binding Round}" />
+
+            <Border
+                Width="300"
+                Height="64"
+                Padding="10"
+                HorizontalAlignment="Center"
+                Background="DarkOliveGreen">
+
+                <StackPanel
+                    Margin="5"
+                    Orientation="Horizontal"
+                    Spacing="5">
+
+                    <Button
+                        x:Name="UndoButton"
+                        Width="30"
+                        Height="30"
+                        Click="UndoButton_OnClick"
+                        DockPanel.Dock="Left">
+                        🔄
+                    </Button>
+                    <Button
+                        x:Name="SkipButton"
+                        Width="30"
+                        Height="30"
+                        Click="SkipButton_OnClick"
+                        DockPanel.Dock="Left">
+                        ➡️
+                    </Button>
+
+                    <TextBlock
+                        x:Name="InputSign"
+                        Margin="20"
+                        DockPanel.Dock="Left"
+                        IsVisible="{Binding InputVisible}">
+                        Введите букву:
+                    </TextBlock>
+
+                    <TextBox
+                        x:Name="InputField"
+                        Width="50"
+                        Margin="10"
+                        DockPanel.Dock="Left"
+                        IsVisible="{Binding InputVisible}"
+                        KeyDown="InputField_OnKeyDown"
+                        Text="{Binding Path=InputFieldText}"
+                        TextChanged="InputField_OnTextChange" />
+
+                    <Button
+                        x:Name="ApplyField"
+                        Width="200"
+                        Height="30"
+                        Margin="10"
+                        Click="ApplyButton_OnClick"
+                        DockPanel.Dock="Left"
+                        IsVisible="{Binding ApplyVisible}">
+                        Подтвердить слово
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- <Border Background="#707040" CornerRadius="5"> -->
+
             <!-- </Border> -->
-
-            <StackPanel Orientation="Vertical">
-                <Border
-                    Width="200"
-                    Margin="0,0,0,10"
-                    Padding="20"
-                    Background="{Binding FirstPlayer.Color}"
-                    CornerRadius="5">
-                    <Grid ColumnDefinitions="Auto,*,Auto">
-                        <Ellipse
-                            Grid.Column="0"
-                            Width="30"
-                            Height="20"
-                            Fill="#808080" />
-                        <TextBlock
-                            Grid.Column="1"
-                            Margin="20,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Text="{Binding FirstPlayer.Name}" />
-                        <TextBlock
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            Text="{Binding FirstPlayer.Score}" />
-                    </Grid>
-                </Border>
-                <Border
-                    Margin="0,0,0,10"
-                    Padding="20"
-                    Background="{Binding SecondPlayer.Color}"
-                    CornerRadius="5">
-                    <Grid ColumnDefinitions="Auto,*,Auto">
-                        <Ellipse
-                            Grid.Column="0"
-                            Width="30"
-                            Height="20"
-                            Fill="#808080" />
-                        <TextBlock
-                            Grid.Column="1"
-                            Margin="20,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            FontWeight="SemiBold"
-                            Text="{Binding SecondPlayer.Name}" />
-                        <TextBlock
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            Text="{Binding SecondPlayer.Score}" />
-                    </Grid>
-                </Border>
-            </StackPanel>
-        </StackPanel>
-
-        <!--  Grid для кнопок 5x5  -->
-        <Grid
-            x:Name="ButtonGrid"
-            Margin="15"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
-            <!--  Колонки и строки будут добавлены программно  -->
-        </Grid>
-
-
+        </DockPanel>
     </DockPanel>
 </Window>

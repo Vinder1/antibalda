@@ -20,8 +20,7 @@ public partial class MultiplayerHandler : ObservableObject
     public bool IsCurrentPlayerMakingMove => !IsNetworkGame || IsFirstPlayerMakingMove == IsFirstPlayer;
 
     public static MultiplayerHandler Instance { get; private set; } = null!;
-    public static void ResetInstance() => Instance = new();
-
+    
     public MultiplayerHandler()
     {
         Instance = this;

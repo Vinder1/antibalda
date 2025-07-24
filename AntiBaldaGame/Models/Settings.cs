@@ -8,6 +8,7 @@ namespace AntiBaldaGame.Models;
 public partial class Settings : ObservableObject
 {
     public int GridSize { get; set; } = 5;
+    public int GoalScore { get; set; } = 20;
     public string Name { get; set; } = "Гость";
     public int TimeOut { get; set; } = 3;
     public bool GameRunning { get; set; } = false;
@@ -15,7 +16,6 @@ public partial class Settings : ObservableObject
     [ObservableProperty] private string otherPlayerName = "Бибурат";
     
     public static Settings Instance { get; private set; } = null!;
-    public static void ResetInstance() => Instance = new();
 
     public Settings()
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AntiBaldaGame.Models;
+using AntiBaldaGame.Views;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
@@ -182,6 +183,17 @@ public partial class GameWindowViewModel : ViewModelBase
 
         var size = Settings.Instance.GridSize;
         Grid.Get(cell / size, cell % size).Letter = letter;
+        Grid.Get(cell / size, cell % size).SpawnTime = Round;
+
+        if (Math.Max(FirstPlayer.Score, SecondPlayer.Score) >= Settings.Instance.GoalScore)
+        {
+            var winnerName =
+                FirstPlayer.Score >= Settings.Instance.GoalScore
+                ? FirstPlayer.Name : SecondPlayer.Name;
+            new WinWindow($"{winnerName} победил!").Show();
+            OnClose.Invoke();
+            return;
+        }
 
         (FirstPlayer.IsMakingMove, SecondPlayer.IsMakingMove)
             = (SecondPlayer.IsMakingMove, FirstPlayer.IsMakingMove);
@@ -230,6 +242,7 @@ public partial class GameWindowViewModel : ViewModelBase
         _skipCount++;
         if (_skipCount == 6)
         {
+            new WinWindow("Ничья!").Show();
             OnClose.Invoke();
             return;
         }
